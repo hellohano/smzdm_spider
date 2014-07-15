@@ -1,7 +1,7 @@
-__author__ = 'hano'
 # coding:utf-8
+__author__ = 'hano'
 import urllib2
-
+import re
 import BeautifulSoup as bs
 
 
@@ -23,12 +23,12 @@ def getWebContent(url):
 
         for div in divs:
             # this div contains the section title(like music/game ..) and the list of resource
-            print "========= section ", divs.index(div), div.find('h2').contents[0].string, " begin ========="
+            open('ktxp.txt', 'a').write("========= section " + div.find('h2').contents[0].string.encode('utf-8') + " begin =========\n")
             tbody = div.find('table').find('tbody')
             resList = tbody.findAll('tr')
             for item in resList:
                 analystKTXPItem(item)
-            print "========= section ", divs.index(div), " begin ========="
+            open('ktxp.txt', 'a').write("========= section end =========\n\n")
         return divs
 
 
@@ -37,14 +37,15 @@ def analystKTXPItem(item):
     # date|resource title    |resource size|seed nums      |download nums  |publisher
     # td  |td(ltext ttitle)/a|      td     |td(class/bts-2)|td(class/btl-1)|td/a(class/team-name)
     # ================== end ================================================
-    date = item.contents[0]
+    nodes = item.findAll('td')
+    date = nodes[0].string
     title = item.find('td', attrs={'class': 'ltext ttitle'}).contents[1].string
-    size = item.contents[2].string
-    seedNum = item.find('td', attrs={'class': 'bts-2'})
-    DownloadNum = item.find('td', attrs={'class': 'btl-1'})
-    publisher = item.contents[5].find('a', attrs={'class': 'team-name'})
-    print date, '|', title, '|', size, '|', seedNum, '|', DownloadNum, '|', publisher
-
+    size = nodes[2].string
+    seedNum = item.find('td', attrs={'class': re.compile('^bts')}).string
+    DownloadNum = item.find('td', attrs={'class': re.compile('^btl')}).string
+    publisher = nodes[5].find('a').string
+    # print date, '|', title, '|', size, '|', seedNum, '|', DownloadNum, '|', publisher
+    open('ktxp.txt', 'a').write((date + '|' + title + '|' + size + '|' + seedNum + '|' + DownloadNum + '|' + publisher + '\n').encode('utf-8'))
 
 if __name__ == '__main__':
     main()
