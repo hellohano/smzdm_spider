@@ -9,10 +9,14 @@ import KtxpItem as ktxp
 
 
 ktxp_today = "http://bt.ktxp.com/today.html#1"
+ktxp_domain = 'http://bt.ktxp.com'
+ktxp_all_res_link = {}
+ktxp_all_link = []
 
 
 def main():
-    get_ktxp_today_res(ktxp_today)
+    ktxp_all_res_link[1] = '/index-1.html'
+    get_ktxp_all_res(ktxp_all_res_link[1], 1)
 
 
 def get_web_content_to_beautifulsoup(url):
@@ -20,6 +24,27 @@ def get_web_content_to_beautifulsoup(url):
     resp = urllib2.urlopen(req)
     web_content = resp.read()
     return bs.BeautifulSoup(web_content)
+
+
+def get_ktxp_all_res(url, pagenum):
+    ktxpurl = ktxp_domain + url
+    soup = get_web_content_to_beautifulsoup(ktxpurl)
+    pages = soup.find('div', {'class': 'pages clear space-bottom'})
+    current_node = pages.find('span', {'class': 'current'})
+    # page_nodes = pages.findAll('a', {'href': re.compile('^/index-')})
+    page_nodes = pages.findAll('a', attrs={'class': None}, href=re.compile('^/index-'))
+    for node in page_nodes:
+        print 'node is ==', node
+        nodenum = int(node.string)
+        if nodenum > pagenum:
+            if not ktxp_all_res_link.has_key(nodenum):
+                ktxp_all_link.append(node['href'])
+                ktxp_all_res_link[int(node.string)] = node['href']
+    print 'all url is =', ktxp_all_link
+    del ktxp_all_res_link[pagenum]
+    print 'search url is =', ktxp_all_res_link
+    if ktxp_all_res_link.keys() is not None:
+        get_ktxp_all_res(ktxp_all_res_link[pagenum + 1], pagenum + 1)
 
 
 def get_ktxp_today_res(url):
