@@ -43,8 +43,11 @@ def get_ktxp_all_res(url, pagenum):
     print 'all url is =', ktxp_all_link
     del ktxp_all_res_link[pagenum]
     print 'search url is =', ktxp_all_res_link
-    if ktxp_all_res_link.keys() is not None:
+    if len(ktxp_all_res_link.keys()) > 0:
         get_ktxp_all_res(ktxp_all_res_link[pagenum + 1], pagenum + 1)
+    else:
+        for link in ktxp_all_link:
+            open('ktxp_all_res_url.txt', 'a').write(link + '\n')
 
 
 def get_ktxp_today_res(url):
