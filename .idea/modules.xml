@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Spider_server/.idea/Spider_server.iml" filepath="$PROJECT_DIR$/../Spider_server/.idea/Spider_server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/smzdm_spider.iml" filepath="$PROJECT_DIR$/.idea/smzdm_spider.iml" />
     </modules>
   </component>

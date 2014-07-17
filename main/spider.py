@@ -16,7 +16,8 @@ ktxp_all_link = []
 
 def main():
     ktxp_all_res_link[1] = '/index-1.html'
-    get_ktxp_all_res(ktxp_all_res_link[1], 1)
+    # get_ktxp_all_res(ktxp_all_res_link[1], 1)
+    get_ktxp_today_res(ktxp_today)
 
 
 def get_web_content_to_beautifulsoup(url):
@@ -81,6 +82,7 @@ def analyst_ktxp_today_item(item):
         ktxp_item.download_num = item.find('td', attrs={'class': re.compile('^btl')}).string
         ktxp_item.publisher = nodes[5].find('a').string
         open('ktxp.txt', 'a').write(ktxp.KtxpItem.print_item(ktxp_item))
+
 
 if __name__ == '__main__':
     main()
